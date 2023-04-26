@@ -10,18 +10,17 @@ class Grupo(models.Model):
         return self.nome
 
 
-class Telefone(models.Model):
-    tipo = models.CharField(max_length=50)
-    número = models.CharField(max_length=15)
+class TipoTelefone(models.Model):
+    descrição = models.CharField(max_length=50)
 
     def __str__(self):
-        return self.número
+        return self.descrição
 
 
 class Contato(models.Model):
     nome = models.CharField("nome completo", max_length=100)
     grupo = models.ForeignKey(Grupo, on_delete=models.CASCADE)
-    telefone = models.ManyToManyField(Telefone)
+    telefones = models.ManyToManyField(TipoTelefone, through='Telefone')
     empresa = models.CharField(max_length=50, blank=True, null=True)
     cargo = models.CharField(max_length=50, blank=True, null=True)
     email = models.CharField("e-mail", max_length=100)
@@ -34,3 +33,14 @@ class Contato(models.Model):
 
     def __str__(self):
         return self.nome
+
+
+class Telefone(models.Model):
+    contato = models.ForeignKey(Contato, on_delete=models.CASCADE)
+    tipo_telefone = models.ForeignKey(TipoTelefone,
+                                      verbose_name="tipo de telefone",
+                                      on_delete=models.CASCADE)
+    número = models.CharField(max_length=25) # +55 44 9 9999 - 8888
+
+    def __str__(self):
+        return f'{self.tipo_telefone}: {self.número}'

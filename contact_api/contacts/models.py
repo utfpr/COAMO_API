@@ -36,7 +36,7 @@ class Contato(models.Model):
 
 
 class Telefone(models.Model):
-    contato = models.ForeignKey(Contato, on_delete=models.CASCADE)
+    contato = models.ForeignKey(Contato, related_name='telefone_list', on_delete=models.CASCADE)
     tipo_telefone = models.ForeignKey(TipoTelefone,
                                       verbose_name="tipo de telefone",
                                       on_delete=models.CASCADE)

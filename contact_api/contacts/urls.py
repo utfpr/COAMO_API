@@ -1,7 +1,12 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
+from rest_framework.routers import DefaultRouter
+from .views import ContatoViewSet
 
+
+router = DefaultRouter()
+router.register(r'contatos', ContatoViewSet)
 
 urlpatterns = [
-    path("", views.index, name="index"),
+    path('', include(router.urls)),
 ]

@@ -1,8 +1,8 @@
 from django.http import HttpResponse
 from markdown import markdown as md
 from rest_framework import viewsets
-from .models import Contato
-from .serializers import ContatoSerializer
+from .models import Contato, Grupo
+from .serializers import ContatoSerializer, GrupoSerializer
 
 
 # def index(request):
@@ -20,3 +20,8 @@ from .serializers import ContatoSerializer
 class ContatoViewSet(viewsets.ModelViewSet):
     serializer_class = ContatoSerializer
     queryset = Contato.objects.all()
+
+
+class GrupoViewSet(viewsets.ModelViewSet):
+    serializer_class = GrupoSerializer
+    queryset = Grupo.objects.all()

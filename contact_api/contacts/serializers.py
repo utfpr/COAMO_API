@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Contato, Grupo, Telefone
+from .models import Contato, Grupo, Telefone, TipoTelefone
+from drf_writable_nested.serializers import WritableNestedModelSerializer
 
 
 class GrupoSerializer(serializers.ModelSerializer):
@@ -9,7 +10,15 @@ class GrupoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class TelefoneSerializer(serializers.ModelSerializer):
+class TipoTelefoneSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = TipoTelefone
+        fields = '__all__'
+
+
+class TelefoneSerializer(WritableNestedModelSerializer):
+    tipo_telefone = TipoTelefoneSerializer()
 
     class Meta:
         model = Telefone
@@ -20,7 +29,7 @@ class TelefoneSerializer(serializers.ModelSerializer):
         ]
 
 
-class ContatoSerializer(serializers.ModelSerializer):
+class ContatoSerializer(WritableNestedModelSerializer):
 
     telefone_list = TelefoneSerializer(many=True)
     grupo = GrupoSerializer()

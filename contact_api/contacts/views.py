@@ -3,6 +3,10 @@ from markdown import markdown as md
 from rest_framework import viewsets
 from .models import Contato, Grupo
 from .serializers import ContatoSerializer, GrupoSerializer
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from twilio.rest import Client
+from .twilio_data import SID, TOKEN, FROM
 
 
 # def index(request):
@@ -25,3 +29,24 @@ class ContatoViewSet(viewsets.ModelViewSet):
 class GrupoViewSet(viewsets.ModelViewSet):
     serializer_class = GrupoSerializer
     queryset = Grupo.objects.all()
+
+
+class SendMsgView(APIView):
+
+    def post(self, request, format=None):
+        account_sid = SID
+        auth_token = TOKEN
+        client = Client(account_sid, auth_token)
+
+        numero_destino = request.data.get('phone')
+        mensagem = request.data.get('message')
+
+        print(numero_destino, mensagem)
+
+        message = client.messages.create(
+            body=mensagem,
+            from_=f'whatsapp:{FROM}',
+            to=f'whatsapp:{numero_destino}'
+        )
+
+        return Response({'message_sid': message.sid})
